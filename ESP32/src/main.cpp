@@ -37,7 +37,7 @@ void setup() {
 
   // Serial initialization
   Serial.begin(115200);
-  Serial.setTimeout(20);
+  Serial.setTimeout(10);
 
   // Push button initialization
   pinMode(PUSH_BUTTON, INPUT);
@@ -54,6 +54,13 @@ void setup() {
   display.setTextColor(WHITE); // Draw white text
   display.setCursor(0, 0);     // Start at top-left corner
   display.cp437(true);         // Use full 256 char 'Code Page 437' font
+  display.display();
+
+  // Tell the world I booted
+  display.write("I booted");
+  display.display();
+  delay(3000);
+  display.clearDisplay();
   display.display();
 }
 
