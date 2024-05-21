@@ -38,6 +38,7 @@ void setup() {
   // Serial initialization
   Serial.begin(115200);
   Serial.setTimeout(10);
+  Serial.flush();
 
   // Push button initialization
   pinMode(PUSH_BUTTON, INPUT);
