@@ -58,10 +58,7 @@ void setup() {
   display.display();
 
   // Tell the world I booted
-  display.write("I booted");
-  display.display();
-  delay(3000);
-  display.clearDisplay();
+  display.write("Ready");
   display.display();
 }
 
@@ -87,13 +84,10 @@ void loop() {
 
     if (serialRead.startsWith(SHOW_DATA)) {
 
-      // Show received data for 3s
+      // Show received data
       String rawData = serialRead.substring(11, serialRead.length());
-      display.write(rawData.c_str());
-      display.display();
-      delay(3000);
-      display.setCursor(0, 0);
       display.clearDisplay();
+      display.write(rawData.c_str());
       display.display();
     }
   }
