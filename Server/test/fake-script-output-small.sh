@@ -24,10 +24,24 @@ echo "          5,23M   2%   59,96MB/s    0:00:00 (xfr#4, ir-chk=1011/1461)"
 sleep .001 
 echo "          5,23M   2%   59,96MB/s    0:00:00 (xfr#4, ir-chk=1011/1461)"
 sleep .001 
-echo "          5,23M   2%   59,96MB/s    0:00:00 (xfr#4, ir-chk=1011/1461)"
+echo "          5,23M   0%   27,79kB/s    0:03:03 (xfr#4, to-chk=106/163373)"
 sleep .001 
-echo "          5,23M   2%   59,96MB/s    0:00:00 (xfr#4, ir-chk=1011/1461)"
+echo "          5,23M   0%   27,79kB/s    0:03:03 (xfr#4, to-chk=76/163373) "
 sleep .001 
-echo "          5,23M   2%   59,96MB/s    0:00:00 (xfr#4, ir-chk=1011/1461)"
+echo "          5,23M   0%   27,79kB/s    0:03:03 (xfr#4, to-chk=65/163373)"
 sleep .001 
-echo "          5,23M   2%   59,96MB/s    0:00:00 (xfr#4, ir-chk=1011/1461)"
+echo "          5,23M   0%   27,79kB/s    0:03:03 (xfr#4, to-chk=53/163373)"
+sleep .5 
+echo "          5,23M   0%   27,79kB/s    0:03:03 (xfr#4, to-chk=51/163373)"
+sleep .5 
+echo "          5,23M   0%   27,79kB/s    0:03:03 (xfr#4, to-chk=48/163373)"
+sleep .5 
+echo "          5,23M   0%   27,79kB/s    0:03:03 (xfr#4, to-chk=38/163373)"
+sleep .5 
+echo "          5,23M   0%   27,79kB/s    0:03:03 (xfr#4, to-chk=28/163373)"
+sleep 2
+echo "          5,23M   0%   27,79kB/s    0:03:03 (xfr#4, to-chk=18/163373)"
+sleep 1 
+echo "          5,23M   0%   27,79kB/s    0:03:03 (xfr#4, to-chk=0/163373) "
+sleep .001 
+echo "          5,23M   0%   27,79kB/s    0:03:03 (xfr#4, to-chk=0/163373)"
