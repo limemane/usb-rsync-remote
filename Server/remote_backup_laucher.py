@@ -13,6 +13,8 @@ DO_ACTION = "0-DOACTION="
 SHOW_DATA = "1-SHOWDATA="
 END_OF_TASK = "2-ENDOFTASK="
 
+ESP32_PORT = "/dev/ttyACM0"
+BAUD_RATE = 115200
 SCRIPT_TO_LAUNCH = "./test/fake-script-output-small.sh"
 
 ################
@@ -22,7 +24,7 @@ SCRIPT_TO_LAUNCH = "./test/fake-script-output-small.sh"
 ################
 
 # Initialize serial interface
-serial_device = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=None) 
+serial_device = serial.Serial(port=ESP32_PORT, baudrate=BAUD_RATE, timeout=None) 
 
 ################
 #

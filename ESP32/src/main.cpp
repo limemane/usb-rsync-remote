@@ -87,7 +87,7 @@ void loop() {
     display.setCursor(0, 0);
     display.write("Sending...");
     display.display();
-    delay(2000);
+    delay(1500);
     
     // Changing flag state to avoid multiple calls of the same task
     task_is_done = false;
