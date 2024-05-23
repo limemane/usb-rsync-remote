@@ -22,7 +22,7 @@ SCRIPT_TO_LAUNCH = "./test/fake-script-output-small.sh"
 ################
 
 # Initialize serial interface
-serial_device = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=.1) 
+serial_device = serial.Serial(port='/dev/ttyACM0', baudrate=115200, timeout=None) 
 
 ################
 #
