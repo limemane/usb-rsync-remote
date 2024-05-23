@@ -111,7 +111,6 @@ void loop() {
     }
     else if (serialRead.startsWith(END_OF_TASK)) {
       // Display that the previously launched task is now done
-      String rawData = serialRead.substring(END_OF_TASK_LENGTH, serialRead.length());
       display.clearDisplay();
       display.setCursor(0, 0);
       display.write("Done");
