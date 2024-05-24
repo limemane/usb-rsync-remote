@@ -19,12 +19,14 @@
 #define PUSH_BUTTON   25
 
 // Orders
-#define DO_ACTION           "0-DOACTION="
-#define DO_ACTION_LENGTH    11
-#define SHOW_DATA           "1-SHOWDATA="
-#define SHOW_DATA_LENGTH    11
-#define END_OF_TASK         "2-ENDOFTASK="
-#define END_OF_TASK_LENGTH  12
+#define CONNECTION_OK         "-CONNOK="
+#define CONNECTION_OK_LENGTH  8
+#define DO_ACTION             "-DOACTION="
+#define DO_ACTION_LENGTH      11
+#define SHOW_DATA             "-SHOWDATA="
+#define SHOW_DATA_LENGTH      11
+#define END_OF_TASK           "-ENDOFTASK="
+#define END_OF_TASK_LENGTH    12
 
 ////////////
 //
@@ -59,14 +61,14 @@ void setup() {
 
   // Initialize screen
   display.clearDisplay();
-  display.setTextSize(2);      // 2:1 pixel scale
+  display.setTextSize(1);      // 2:1 pixel scale
   display.setTextColor(WHITE); // Draw white text
   display.setCursor(0, 0);     // Start at top-left corner
   display.cp437(true);         // Use full 256 char 'Code Page 437' font
   display.display();
 
   // Tell the world I booted
-  display.write("Ready");
+  display.write("Not connected");
   display.display();
 }
 
@@ -101,7 +103,14 @@ void loop() {
     String serialRead = Serial.readString();
     serialRead.trim();
 
-    if (serialRead.startsWith(SHOW_DATA)) {
+    if (serialRead.startsWith(CONNECTION_OK)) {
+      // Display that serial connection has been established
+      display.clearDisplay();
+      display.setCursor(0, 0);
+      display.write("Connected !");
+      display.display();
+    }
+    else if (serialRead.startsWith(SHOW_DATA)) {
       // Display received data on screen
       String rawData = serialRead.substring(SHOW_DATA_LENGTH, serialRead.length());
       display.clearDisplay();
