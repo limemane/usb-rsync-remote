@@ -8,4 +8,4 @@ Can be useful if you plan to start your backup script manually on your homeserve
 - An ESP32
 - An OLED SSD1306 display
 - One push button 
-- Any kind of computer able to run a Python script
+- Any kind of computer with a USB port and able to run a Python script
