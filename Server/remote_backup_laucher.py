@@ -110,7 +110,6 @@ while True:
                         doAction(serial_device)
                     else:
                         logging.warning("Serial message has no known meaning, ignoring")
-                    time.sleep(1)
                 else:
                     # Device not connected anymore, resetting stored values about the device
                     # TODO : An exception is triggered before this can happen, must find an other way to detect disconnected device
