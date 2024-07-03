@@ -25,7 +25,7 @@ SCRIPT_TO_LAUNCH = "./test-script-output.sh"
 # Functions
 ##############################################
 
-# Sends a message to the serial connected device
+# Function sending a message to the serial connected device
 def sendMessage(serial_device, message_type, message_content): 
     serial_device.write(
         bytes(
@@ -35,7 +35,7 @@ def sendMessage(serial_device, message_type, message_content):
     ) 
     time.sleep(0.05) 
 
-# Given the serial number a of device, return its port if device found
+# Function returning a devide port on the host machine given its serial number
 def searchDevicePortBySerialNumber(serial_number):
     device_port_found = None
     # Scanning serial ports waiting for the right serial number
@@ -48,7 +48,7 @@ def searchDevicePortBySerialNumber(serial_number):
 
     return device_port_found
 
-# Launches a script and keeps the serial connected device updated about it's state
+# Function launching a script and keeping the serial connected device updated about it's state
 def doAction(serial_device):
     # Launching the script
     script_process = subprocess.Popen(
@@ -65,7 +65,7 @@ def doAction(serial_device):
         last_stdout_line = ""
         last_serialwrite_epoch_time = 0
 
-        # Check if script execution ended or not
+        # Check if script execution has ended or not
         if script_process.poll() is None: 
             # Still running
             last_stdout_line = script_process.stdout.readline()
