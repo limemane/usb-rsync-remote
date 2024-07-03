@@ -127,7 +127,7 @@ while True:
                     else:
                         logging.warning("Serial message has no known meaning, ignoring")
             except serial.SerialException:
-                # Device not connected anymore, resetting stored values about the device
+                # Device not connected anymore, reseting stored values about the device
                 logging.warning("Can't reach device anymore, assuming it was disconnected. Will continue to search for it.")
                 device_port = None
                 serial_device = None
