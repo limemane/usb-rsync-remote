@@ -3,6 +3,7 @@ import serial.tools.list_ports
 import time 
 import subprocess
 import logging
+import re
 
 ##############################################
 # Constants
@@ -26,7 +27,12 @@ SCRIPT_TO_LAUNCH = "./test/fake-script-output-small.sh"
 
 # Sends a message to the serial connected device
 def sendMessage(serial_device, message_type, message_content): 
-    serial_device.write(bytes(message_type + message_content, 'utf-8')) 
+    serial_device.write(
+        bytes(
+            message_type + message_content, 
+            'utf-8'
+        )
+    ) 
     time.sleep(0.05) 
 
 # Given the serial number a of device, return its port if device found
@@ -45,7 +51,11 @@ def searchDevicePortBySerialNumber(serial_number):
 # Launches a script and keeps the serial connected device updated about it's state
 def doAction(serial_device):
     # Launching the script
-    script_process = subprocess.Popen(['bash', SCRIPT_TO_LAUNCH], stdout=subprocess.PIPE, text=True)
+    script_process = subprocess.Popen(
+        ['bash', SCRIPT_TO_LAUNCH], 
+        stdout=subprocess.PIPE, 
+        text=True
+    )
     logging.warning(SCRIPT_TO_LAUNCH + " now starting")
 
     backup_is_done = False;
@@ -55,16 +65,24 @@ def doAction(serial_device):
         last_stdout_line = ""
         last_serialwrite_epoch_time = 0
 
-        # Check if scirpt execution ened or not
+        # Check if script execution ended or not
         if script_process.poll() is None: 
             # Still running
             last_stdout_line = script_process.stdout.readline()
             # Wait at least one second between serial writes
             epoch_time = int(time.time())
             if epoch_time > last_serialwrite_epoch_time :
-                # Send data to display to the serial connected device
-                sendMessage(serial_device, SHOW_DATA, last_stdout_line) 
-                last_serialwrite_epoch_time = epoch_time
+                # Extracting reconstruction speed, elapsed time on current file, current file number, remaining files to check
+                pattern = "(\d{1,3},\d{2}.B\/s).*(\d{1,2}:\d{2}:\d{2}).*xfr#(\d{1,30}).*(\d{1,30}\/\d{1,30})"
+                match = re.search(pattern, last_stdout_line)
+                if match:
+                    # Send data to display to the serial connected device as a single string
+                    sendMessage(
+                        serial_device, 
+                        SHOW_DATA, 
+                        match.group(1) + "_" + match.group(2) + "_" + match.group(3) + "_" + match.group(4)
+                    ) 
+                    last_serialwrite_epoch_time = epoch_time
         else:
             # Tell the serial connected device the script execution is over
             logging.warning(SCRIPT_TO_LAUNCH + " execution has ended, sending signal to ESP32")
@@ -89,7 +107,11 @@ while True:
     else:
         if serial_device == None:
             # Device found, initialize serial interface
-            serial_device = serial.Serial(port=device_port, baudrate=BAUD_RATE, timeout=None) 
+            serial_device = serial.Serial(
+                port=device_port, 
+                baudrate=BAUD_RATE, 
+                timeout=None
+            ) 
             sendMessage(serial_device, CONNECTION_OK, "") 
         else:
             try:
@@ -104,7 +126,7 @@ while True:
                         doAction(serial_device)
                     else:
                         logging.warning("Serial message has no known meaning, ignoring")
-            except:
+            except serial.SerialException:
                 # Device not connected anymore, resetting stored values about the device
                 logging.warning("Can't reach device anymore, assuming it was disconnected. Will continue to search for it.")
                 device_port = None
