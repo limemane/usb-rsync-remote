@@ -4,11 +4,9 @@ import time
 import subprocess
 import logging
 
-################
-#
+##############################################
 # Constants
-#
-################
+##############################################
 
 # Instructions
 CONNECTION_OK = "-CONNOK="
@@ -22,11 +20,9 @@ BAUD_RATE = 115200
 
 SCRIPT_TO_LAUNCH = "./test/fake-script-output-small.sh"
 
-################
-#
+##############################################
 # Functions
-#
-################
+##############################################
 
 # Sends a message to the serial connected device
 def sendMessage(serial_device, message_type, message_content): 
@@ -75,11 +71,9 @@ def doAction(serial_device):
             sendMessage(serial_device, END_OF_TASK, "")
             backup_is_done = True
 
-################
-#
+##############################################
 # Loop
-#
-################
+##############################################
 
 logging.warning("Script started, searching for a device with a serial number matching " + ESP32_SERIAL)
 
@@ -90,15 +84,15 @@ while True:
     if device_port == None:
         # No device connected, searching for it on a 5 seconds interval
         device_port = searchDevicePortBySerialNumber(ESP32_SERIAL)
-        time.sleep(5)
+        if device_port == None:
+            time.sleep(5)
     else:
         if serial_device == None:
             # Device found, initialize serial interface
             serial_device = serial.Serial(port=device_port, baudrate=BAUD_RATE, timeout=None) 
             sendMessage(serial_device, CONNECTION_OK, "") 
         else:
-            # Device has already been initialized, checking it is still connected
-            if searchDevicePortBySerialNumber(ESP32_SERIAL) != None:
+            try:
                 # Still connected : wait for an instruction to be given on the serial interface
                 if serial_device.isOpen():
                     input_data = serial_device.readline().strip().decode("utf-8")
@@ -110,9 +104,9 @@ while True:
                         doAction(serial_device)
                     else:
                         logging.warning("Serial message has no known meaning, ignoring")
-                else:
-                    # Device not connected anymore, resetting stored values about the device
-                    # TODO : An exception is triggered before this can happen, must find an other way to detect disconnected device
-                    logging.warning("Device disconnected")
-                    device_port = None
-                    serial_device = None
+            except:
+                # Device not connected anymore, resetting stored values about the device
+                logging.warning("Can't reach device anymore, assuming it was disconnected. Will continue to search for it.")
+                device_port = None
+                serial_device = None
+                    
