@@ -19,7 +19,7 @@ END_OF_TASK = "-ENDOFTASK="
 ESP32_SERIAL = "5185008510"
 BAUD_RATE = 115200
 
-SCRIPT_TO_LAUNCH = "./test/fake-script-output-small.sh"
+SCRIPT_TO_LAUNCH = "./test-script-output.sh"
 
 ##############################################
 # Functions
@@ -131,4 +131,4 @@ while True:
                 logging.warning("Can't reach device anymore, assuming it was disconnected. Will continue to search for it.")
                 device_port = None
                 serial_device = None
-                    
+                
