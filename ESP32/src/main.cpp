@@ -4,16 +4,12 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-////////////
-//
-// CONSTANTS  
-//
-////////////
+#include <OLEDScreen.h>
+#include <InitalizationException.h>
 
-// OLED 
-#define SCREEN_WIDTH  128
-#define SCREEN_HEIGHT 64
-#define OLED_RESET    -1 
+/*******************************************************
+ * Constants
+ ******************************************************/
 
 // Button
 #define PUSH_BUTTON   25
@@ -28,14 +24,12 @@
 #define END_OF_TASK           "-ENDOFTASK="
 #define END_OF_TASK_LENGTH    12
 
-////////////
-//
-// INIT  
-//
-////////////
+/*******************************************************
+ * Init
+ ******************************************************/
 
-// Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+// OLED Screen manager
+OLEDScreen * pDisplay = new OLEDScreen();
 
 // Variable to read the status of push button
 int button_state = 0;   
@@ -43,90 +37,74 @@ int button_state = 0;
 // Flag indicating if lauched task has been reported done
 bool task_is_done = true;
 
-void setup() {
+/*******************************************************
+ * Setup
+ ******************************************************/
 
-  // Serial initialization
+void setup() 
+{
+  // Setup serial communication
   Serial.begin(115200);
   Serial.setTimeout(10);
   Serial.flush();
 
-  // Push button initialization
-  pinMode(PUSH_BUTTON, INPUT);
-
-  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { 
-    Serial.println(F("SSD1306 allocation failed"));
-    for(;;); // Don't proceed, loop forever
+  // Setup OLED Screen
+  try 
+  {
+    pDisplay->init();
+  }
+  catch (InitializationException e) 
+  {
+    char * errorMessage = strcat(strdup("ERROR : "), e.what());
+    Serial.println(errorMessage);
   }
 
-  // Initialize screen
-  display.clearDisplay();
-  display.setTextSize(1);      // 2:1 pixel scale
-  display.setTextColor(WHITE); // Draw white text
-  display.setCursor(0, 0);     // Start at top-left corner
-  display.cp437(true);         // Use full 256 char 'Code Page 437' font
-  display.display();
+  // Display default state
+  pDisplay->writeMessage("Not connected");
 
-  // Tell the world I booted
-  display.write("Not connected");
-  display.display();
+  // Setup button
+  pinMode(PUSH_BUTTON, INPUT);
 }
 
-////////////
-//
-// LOOP  
-//
-////////////
+/*******************************************************
+ * Loop
+ ******************************************************/
 
-void loop() {
-
-  // Write on serial interface when button pressed 
-  button_state = digitalRead(PUSH_BUTTON);
-  if (button_state == HIGH && task_is_done) {
-    
-    // Telling the user his command is being sent
-    display.clearDisplay();
-    display.setCursor(0, 0);
-    display.write("Sending...");
-    display.display();
-    delay(1500);
-    
-    // Changing flag state to avoid multiple calls of the same task
-    task_is_done = false;
-
-    // Sending order
-    Serial.println(DO_ACTION);
-  }
-
+void loop() 
+{
   // Wait for something on serial interface
-  if (Serial.available() > 0) {
+  if (Serial.available() > 0) 
+  {
     String serialRead = Serial.readString();
     serialRead.trim();
 
-    if (serialRead.startsWith(CONNECTION_OK)) {
-      // Display that serial connection has been established
-      display.clearDisplay();
-      display.setCursor(0, 0);
-      display.write("Connected !");
-      display.display();
+    if (serialRead.startsWith(CONNECTION_OK)) 
+    {
+      pDisplay->writeMessage("Connected !");
     }
-    else if (serialRead.startsWith(SHOW_DATA)) {
-      // Display received data on screen
+    else if (serialRead.startsWith(SHOW_DATA)) 
+    {
       String rawData = serialRead.substring(SHOW_DATA_LENGTH, serialRead.length());
-      display.clearDisplay();
-      display.setCursor(0, 0);
-      display.write(rawData.c_str());
-      display.display();
+      pDisplay->writeMessage(rawData.c_str());
     }
-    else if (serialRead.startsWith(END_OF_TASK)) {
-      // Display that the previously launched task is now done
-      display.clearDisplay();
-      display.setCursor(0, 0);
-      display.write("Done");
-      display.display();
-
+    else if (serialRead.startsWith(END_OF_TASK)) 
+    {
+      pDisplay->writeMessage("Done");
       // Changing flag state to allow the user to launch tasks again
       task_is_done = true;
     }
+  }
+
+  // Write on serial interface when button pressed 
+  button_state = digitalRead(PUSH_BUTTON);
+  if (button_state == HIGH && task_is_done) 
+  {
+    pDisplay->writeMessage("Sending...");
+    delay(1500);
+
+    // Changing flag state to avoid multiple calls of the same task
+    task_is_done = false;
+
+    Serial.println(DO_ACTION);
   }
 }
