@@ -1,6 +1,6 @@
-# USB server remote
+# USB script launcher
 
-A USB remote with a push button and a small screen that you can plug to a computer to make it run anything you want. 
+A USB remote with a push button and a small screen that you can plug to a computer to make it run any script you want. 
 Can be useful if you plan to start your backup script manually on your homeserver, but don't wan't to waste time logging into it for example.
 
 ## Hardware involved
