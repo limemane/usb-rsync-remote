@@ -57,6 +57,7 @@ void setup()
   {
     char * errorMessage = strcat(strdup("ERROR : "), e.what());
     Serial.println(errorMessage);
+    exit(0);
   }
 
   // Display default state
