@@ -3,14 +3,14 @@
 class DisplayManager
 {
     public:
-        DisplayManager(OLEDScreen * pOledScreen);
-        void setConnectionStatus(char * connectionStatus);
+        DisplayManager(Adafruit_SSD1306 * pDisplay);
         void setServerState(char * serverState);
+        void displayDefaultScreen();
         void displayBackupProgress(char * speed, char * elapsedTime, char * currentFileNumber, char * remainingFiles);
         
     private:
-        OLEDScreen * pOledScreen;
-        void updateStatusAndState();
-        char * connectionStatus;
+        Adafruit_SSD1306 * pDisplay;
+        int computeCursorLinePosition(int lineNumber);
+        void addTopTitle();
         char * serverState;
 };

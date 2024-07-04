@@ -6,6 +6,7 @@
 
 #include <OLEDScreen.h>
 #include <InitalizationException.h>
+#include <DisplayManager.h>
 
 /*******************************************************
  * Constants
@@ -28,8 +29,11 @@
  * Init
  ******************************************************/
 
-// OLED Screen manager
+// OLED Screen driver
 OLEDScreen * pDisplay = new OLEDScreen();
+
+// Display Manager
+DisplayManager * pDisplayManager = new DisplayManager(pDisplay->getDisplay());
 
 // Variable to read the status of push button
 int button_state = 0;   
@@ -60,8 +64,9 @@ void setup()
     exit(0);
   }
 
-  // Display default state
-  pDisplay->writeMessage("Not connected");
+  // Display default screen
+  pDisplayManager->setServerState("  Waiting for host");
+  pDisplayManager->displayDefaultScreen();
 
   // Setup button
   pinMode(PUSH_BUTTON, INPUT);
@@ -81,16 +86,18 @@ void loop()
 
     if (serialRead.startsWith(CONNECTION_OK)) 
     {
-      pDisplay->writeMessage("Connected !");
+      pDisplayManager->setServerState("   Ready to start");
+      pDisplayManager->displayDefaultScreen();
     }
     else if (serialRead.startsWith(SHOW_DATA)) 
     {
       String rawData = serialRead.substring(SHOW_DATA_LENGTH, serialRead.length());
-      pDisplay->writeMessage(rawData.c_str());
+      pDisplayManager->displayBackupProgress("t", "e", "s", "t"); // TODO : parse and displayrawdata
     }
     else if (serialRead.startsWith(END_OF_TASK)) 
     {
-      pDisplay->writeMessage("Done");
+      pDisplayManager->setServerState("Host task successful");
+      pDisplayManager->displayDefaultScreen();
       // Changing flag state to allow the user to launch tasks again
       task_is_done = true;
     }
@@ -100,7 +107,8 @@ void loop()
   button_state = digitalRead(PUSH_BUTTON);
   if (button_state == HIGH && task_is_done) 
   {
-    pDisplay->writeMessage("Sending...");
+    pDisplayManager->setServerState("      Sending...");
+    pDisplayManager->displayDefaultScreen();
     delay(1500);
 
     // Changing flag state to avoid multiple calls of the same task

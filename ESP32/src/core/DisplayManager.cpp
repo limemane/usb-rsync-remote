@@ -4,14 +4,9 @@
  * Public
  ******************************************************/
 
-DisplayManager::DisplayManager(OLEDScreen * pOledScreen)
+DisplayManager::DisplayManager(Adafruit_SSD1306 * pDisplay)
 {
-    pOledScreen = pOledScreen;
-}
-
-void setConnectionStatus(char * connectionStatus)
-{
-    connectionStatus = connectionStatus;
+    pDisplay = pDisplay;
 }
 
 void setServerState(char * serverState) 
@@ -19,27 +14,65 @@ void setServerState(char * serverState)
     serverState = serverState;
 }
 
+void DisplayManager::displayDefaultScreen() 
+{    
+    pDisplay->clearDisplay();
+
+    // Show title on first line
+    addTopTitle();
+
+    // Show server state
+    pDisplay->setTextColor(WHITE);
+    pDisplay->setCursor(0, computeCursorLinePosition(3));
+    pDisplay->setTextWrap(0);
+    pDisplay->setCursor(16, 16); // TODO : calculate center
+    pDisplay->println(serverState);
+    pDisplay->display();
+}
+
+
 void DisplayManager::displayBackupProgress(
     char * speed, 
     char * elapsedTime, 
     char * currentFileNumber, 
     char * remainingFiles)
 {
-    Adafruit_SSD1306 * display = pOledScreen->getDisplay();
-    display->setCursor(0,0);
-    display->write("Construction speed ");
-    // TODO : show every values
+    pDisplay->clearDisplay();
+
+    // Show title on first line
+    addTopTitle();
+
+    pDisplay->setCursor(0,computeCursorLinePosition(2));
+    pDisplay->write("Host script running");
+
+    pDisplay->setCursor(0,computeCursorLinePosition(3));
+    pDisplay->write("Const. speed " + *speed);
+    pDisplay->setCursor(0,computeCursorLinePosition(4));
+    pDisplay->write("Remaining " + *remainingFiles);
+    pDisplay->setCursor(0,computeCursorLinePosition(5));
+    pDisplay->write("Current file nb " + *currentFileNumber);
+    pDisplay->setCursor(0,computeCursorLinePosition(6));
+    pDisplay->write("Time " + *elapsedTime);
 }
 
 /*******************************************************
  * Private
  ******************************************************/
 
-void DisplayManager::updateStatusAndState() 
+int DisplayManager::computeCursorLinePosition(int lineNumber) 
 {
-    Adafruit_SSD1306 * display = pOledScreen->getDisplay();
-    display->setCursor(0,0);
-    display->write(connectionStatus);
-    display->setCursor(0,8);
-    display->write(serverState);
+    return (lineNumber * 8) - 8;
+}
+
+void DisplayManager::addTopTitle()
+{
+    pDisplay->setTextColor(BLACK, WHITE);
+    pDisplay->setTextSize(1);
+    pDisplay->setCursor(0, 0);
+    pDisplay->println(" USB Script Launcher ");
+}
+
+int * findCenteredCoordinates(char * text)
+{
+    
 }
