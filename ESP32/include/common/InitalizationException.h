@@ -5,9 +5,9 @@ using namespace std;
 class InitializationException : public exception
 {
     public:
-        InitializationException(char * message);
+        InitializationException(const char * message);
         const char* what();
         
     private:
-        char * message;
+        char message[128];
 };

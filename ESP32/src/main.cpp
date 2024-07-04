@@ -6,7 +6,7 @@
 
 #include <OLEDScreen.h>
 #include <InitalizationException.h>
-#include <DisplayManager.h>
+#include <DisplayManager.h> 
 
 /*******************************************************
  * Constants
@@ -41,6 +41,9 @@ int button_state = 0;
 // Flag indicating if lauched task has been reported done
 bool task_is_done = true;
 
+// Flag indicating if button state must be listened
+bool can_press_button = false;
+
 /*******************************************************
  * Setup
  ******************************************************/
@@ -57,19 +60,19 @@ void setup()
   {
     pDisplay->init();
   }
-  catch (InitializationException e) 
+  catch (InitializationException * e) 
   {
-    char * errorMessage = strcat(strdup("ERROR : "), e.what());
+    char * errorMessage = strcat(strdup("ERROR : "), e->what());
     Serial.println(errorMessage);
     exit(0);
-  }
+  } 
 
   // Display default screen
   pDisplayManager->setServerState("  Waiting for host");
   pDisplayManager->displayDefaultScreen();
 
   // Setup button
-  pinMode(PUSH_BUTTON, INPUT);
+  pinMode(PUSH_BUTTON, INPUT_PULLDOWN);
 }
 
 /*******************************************************
@@ -86,13 +89,14 @@ void loop()
 
     if (serialRead.startsWith(CONNECTION_OK)) 
     {
+      can_press_button = true;
       pDisplayManager->setServerState("   Ready to start");
       pDisplayManager->displayDefaultScreen();
     }
     else if (serialRead.startsWith(SHOW_DATA)) 
     {
       String rawData = serialRead.substring(SHOW_DATA_LENGTH, serialRead.length());
-      pDisplayManager->displayBackupProgress("t", "e", "s", "t"); // TODO : parse and displayrawdata
+      pDisplayManager->displayBackupProgress("t", "e", "s", "t"); // TODO : parse and display raw data
     }
     else if (serialRead.startsWith(END_OF_TASK)) 
     {
@@ -105,7 +109,7 @@ void loop()
 
   // Write on serial interface when button pressed 
   button_state = digitalRead(PUSH_BUTTON);
-  if (button_state == HIGH && task_is_done) 
+  if (button_state == HIGH && can_press_button && task_is_done) 
   {
     pDisplayManager->setServerState("      Sending...");
     pDisplayManager->displayDefaultScreen();
