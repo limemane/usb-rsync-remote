@@ -73,7 +73,7 @@ def doAction(serial_device):
             epoch_time = int(time.time())
             if epoch_time > last_serialwrite_epoch_time :
                 # Extracting reconstruction speed, elapsed time on current file, current file number, remaining files to check
-                pattern = "(\d{1,3},\d{2}.B\/s).*(\d{1,2}:\d{2}:\d{2}).*xfr#(\d{1,30}).*(\d{1,30}\/\d{1,30})"
+                pattern = r"(\d{1,3},\d{2}.B\/s).*(\d{1,2}:\d{2}:\d{2}).*xfr#(\d{1,30}).*(\d{1,30}\/\d{1,30})"
                 match = re.search(pattern, last_stdout_line)
                 if match:
                     # Send data to display to the serial connected device as a single string
