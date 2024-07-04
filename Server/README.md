@@ -1,11 +1,12 @@
 # Testing serial communication on windows using WSL
 
-This project is intended to run on GNU/Linux exclusively.
-To test the whole project easily using a Windows machine, a WSL GNU/Linux distribution has to be installed along with usbipd.
+If you intend to use this project to run a GNU/Linux script but want to test it on a Windows machine before, a WSL GNU/Linux distribution has to be installed along with usbipd.
 Then the ESP32 bus has to be shared to the WSL-hosted OS.
 
 
 ## Sharing ESP32 bus to a WSL-hosted OS 
+
+Open a terminal on your Windows then type :
 
 `usbipd list` to get the ESP32 BUSID
 
