@@ -1,2 +1,2 @@
-script_to_run: ../test/test-script-output.sh
-esp32_serial: 5185008510
+script_to_run: ../test/test-script-output.sh # Replace this with your own script
+esp32_serial: 5185008510 # Replace with yours, read parent README.md to know how
