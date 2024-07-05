@@ -1,35 +1,20 @@
-# Testing serial communication on windows using WSL
+# Host script
 
-If you intend to use this project to run a bash script but want to test it on a Windows machine before, a WSL GNU/Linux distribution has to be installed along with usbipd.
-Then the ESP32 bus has to be shared to the WSL-hosted OS.
+To allow the ESP32 based USB remote to start, the following Python script `src/usb_remote_listener.py` must be running on the host machine.
+A YAML config file is provided to allow the remote user to specifiy the path of the script the host should launch, and the ESP32 device serial number
 
+## How do I find my ESP32 serial number
 
-## Sharing ESP32 bus to a WSL-hosted OS 
+### macos
+Open a terminal and type `ls /dev/tty* | grep usb`
+You should get something similar to `/dev/tty.usbserial-xxxx` where `xxxx` is your ESP32 serial number.
 
-Open a terminal on your Windows then type :
+### GNU/Linux 
+Open a terminal and type `lsusb -v` 
+Search for the device corresponding to your ESP32, then look for the `iSerial` property.
 
-`usbipd list` to get the ESP32 BUSID
-
-`usbipd bind --busid 1-2` to share the BUSID (requires administrator privileges)
-
-`usbipd attach --wsl --busid 1-2` to attach the ESP32 to the WSL-hosted OS
-
-`usbipd detach --busid 1-2` to make the ESP32 available on Windows again
-
-To check if the newly shared ESP32 is detected type `lsusb` in the WSL-hoted GNU/Linux terminal to get the device ID.
-
-
-## Testing data exchanges with ESP32
-
-### Using Bash
-
-Type `stty 115200 -F /dev/ttyACM0 raw -echo` on the WSL-hosted GNU/Linux to start the serial communication.
-
-`cat /dev/ttyACM0` can be used to show messages sent by the ESP32
-
-To send a message to the ESP32 use `echo "message to send" > /dev/ttyACM0`
-
-
-### Using Python
-
-see test/esp32-serial-test.py
+### Windows
+Open the Config panel > Device Manager
+You should get a device with a COM port assigned to it, get its properties, go into details
+Search for a property looking like `access path to device instance` or `device instance access path` (translated from a non-english OS, might be name differently)
+The property value shows a path, your ESP32 serial number is located after the last `\` symbol. 

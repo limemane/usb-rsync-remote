@@ -11,4 +11,4 @@ A crossplatform USB remote with a push button and a small OLED display that you 
 
 ## Sofware involved
 
-- Python 3 with pyserial installed : `pip3 install pyserial` 
+- Python 3+ with pyserial installed : `pip3 install pyserial` 
