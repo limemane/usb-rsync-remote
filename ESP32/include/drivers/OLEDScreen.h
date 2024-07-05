@@ -9,9 +9,9 @@ class OLEDScreen
     public:
         OLEDScreen();
         void init();
-        Adafruit_SSD1306 * getDisplay();
-        void writeMessage(const char * message);
+        Adafruit_SSD1306* getDisplay();
+        void writeMessage(const char* message);
 
     private:
-        Adafruit_SSD1306 * pDisplay;
+        Adafruit_SSD1306* pDisplay;
 };

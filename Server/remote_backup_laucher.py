@@ -77,15 +77,17 @@ def doAction(serial_device):
                 match = re.search(pattern, last_stdout_line)
                 if match:
                     # Send data to display to the serial connected device as a single string
+                    serializedLogLine = match.group(1) + "_" + match.group(2) + "_" + match.group(3) + "_" + match.group(4)
+                    logging.warning("Sending rsync log line : " + serializedLogLine)
                     sendMessage(
                         serial_device, 
                         SHOW_DATA, 
-                        match.group(1) + "_" + match.group(2) + "_" + match.group(3) + "_" + match.group(4)
+                        serializedLogLine
                     ) 
                     last_serialwrite_epoch_time = epoch_time
         else:
             # Tell the serial connected device the script execution is over
-            logging.warning(SCRIPT_TO_LAUNCH + " execution has ended, sending signal to ESP32")
+            logging.warning(SCRIPT_TO_LAUNCH + " execution has ended, sending end signal to ESP32")
             sendMessage(serial_device, END_OF_TASK, "")
             backup_is_done = True
 

@@ -5,7 +5,7 @@ using namespace std;
 class InitializationException : public exception
 {
     public:
-        InitializationException(const char * message);
+        InitializationException(const char* message);
         const char* what();
         
     private:

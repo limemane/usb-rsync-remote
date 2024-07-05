@@ -7,6 +7,7 @@
 #include <OLEDScreen.h>
 #include <InitalizationException.h>
 #include <DisplayManager.h> 
+#include <RsyncLogHandler.h>
 
 /*******************************************************
  * Constants
@@ -29,11 +30,12 @@
  * Init
  ******************************************************/
 
-// OLED Screen driver
-OLEDScreen * pDisplay = new OLEDScreen();
+// Drivers init
+OLEDScreen* pDisplay = new OLEDScreen();
 
-// Display Manager
-DisplayManager * pDisplayManager = new DisplayManager(pDisplay->getDisplay());
+// Core init
+DisplayManager* pDisplayManager = new DisplayManager(pDisplay->getDisplay());
+RsyncLogHandler* pRsyncLogHandler = new RsyncLogHandler();
 
 // Variable to read the status of push button
 int button_state = 0;   
@@ -60,9 +62,9 @@ void setup()
   {
     pDisplay->init();
   }
-  catch (InitializationException * e) 
+  catch (InitializationException* e) 
   {
-    char * errorMessage = strcat(strdup("ERROR : "), e->what());
+    char* errorMessage = strcat(strdup("ERROR : "), e->what());
     Serial.println(errorMessage);
     exit(0);
   } 
@@ -95,13 +97,25 @@ void loop()
     }
     else if (serialRead.startsWith(SHOW_DATA)) 
     {
-      String rawData = serialRead.substring(SHOW_DATA_LENGTH, serialRead.length());
-      pDisplayManager->displayBackupProgress("t", "e", "s", "t"); // TODO : parse and display raw data
+      // Delete show_data header
+      String rawData = serialRead.substring(SHOW_DATA_LENGTH - 1, serialRead.length());
+
+      // Parse received rsync log line
+      pRsyncLogHandler->parseRsyncLogLine(rawData.c_str());
+
+      // Display parsed data
+      pDisplayManager->displayBackupProgress(
+        pRsyncLogHandler->getSpeed(), 
+        pRsyncLogHandler->getElapsedTime(), 
+        pRsyncLogHandler->getCurrentFileNumber(), 
+        pRsyncLogHandler->getRemainingFiles()
+        );
     }
     else if (serialRead.startsWith(END_OF_TASK)) 
     {
       pDisplayManager->setServerState("Host task successful");
       pDisplayManager->displayDefaultScreen();
+
       // Changing flag state to allow the user to launch tasks again
       task_is_done = true;
     }

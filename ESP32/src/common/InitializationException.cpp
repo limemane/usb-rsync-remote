@@ -4,7 +4,7 @@
 
 using namespace std;
 
-InitializationException::InitializationException(const char * message)
+InitializationException::InitializationException(const char* message)
 {
     // String copy so constructor can either receive a literal string or a char pointer containing the error message (cf doudou)
     strncpy(this->message, message, 127);

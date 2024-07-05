@@ -36,12 +36,12 @@ void OLEDScreen::init()
     }
 }
 
-Adafruit_SSD1306 * OLEDScreen::getDisplay()
+Adafruit_SSD1306* OLEDScreen::getDisplay()
 {
     return pDisplay;
 }
 
-void OLEDScreen::writeMessage(const char * message)
+void OLEDScreen::writeMessage(const char* message)
 {
     pDisplay->clearDisplay();
     pDisplay->setCursor(0, 0);
