@@ -1,0 +1,2 @@
+script_to_run: ../test/test-script-output.sh
+esp32_serial: 5185008510

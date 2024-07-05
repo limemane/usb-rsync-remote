@@ -1,6 +1,6 @@
 # Testing serial communication on windows using WSL
 
-If you intend to use this project to run a GNU/Linux script but want to test it on a Windows machine before, a WSL GNU/Linux distribution has to be installed along with usbipd.
+If you intend to use this project to run a bash script but want to test it on a Windows machine before, a WSL GNU/Linux distribution has to be installed along with usbipd.
 Then the ESP32 bus has to be shared to the WSL-hosted OS.
 
 
@@ -32,4 +32,4 @@ To send a message to the ESP32 use `echo "message to send" > /dev/ttyACM0`
 
 ### Using Python
 
-see esp32-serial-test.py
+see test/esp32-serial-test.py

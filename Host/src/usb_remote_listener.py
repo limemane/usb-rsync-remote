@@ -4,6 +4,7 @@ import time
 import subprocess
 import logging
 import re
+import yaml 
 
 ##############################################
 # Constants
@@ -16,14 +17,20 @@ SHOW_DATA = "-SHOWDATA="
 END_OF_TASK = "-ENDOFTASK="
 
 # Serial parameters
-ESP32_SERIAL = "5185008510"
 BAUD_RATE = 115200
 
-SCRIPT_TO_LAUNCH = "./test-script-output.sh"
+# Config file path
+CONFIG_FILE_PATH = "config.yaml"
 
 ##############################################
 # Functions
 ##############################################
+
+# Function to load config file
+def configFileLoader():
+    with open(CONFIG_FILE_PATH, 'r') as file_descriptor:
+        configData = yaml.safe_load(file_descriptor)
+    return configData
 
 # Function sending a message to the serial connected device
 def sendMessage(serial_device, message_type, message_content): 
@@ -49,14 +56,14 @@ def searchDevicePortBySerialNumber(serial_number):
     return device_port_found
 
 # Function launching a script and keeping the serial connected device updated about it's state
-def doAction(serial_device):
+def doAction(serial_device, script_to_run):
     # Launching the script
     script_process = subprocess.Popen(
-        ['bash', SCRIPT_TO_LAUNCH], 
+        ['bash', script_to_run], 
         stdout=subprocess.PIPE, 
         text=True
     )
-    logging.warning(SCRIPT_TO_LAUNCH + " now starting")
+    logging.warning(script_to_run + " now starting")
 
     backup_is_done = False;
 
@@ -87,7 +94,7 @@ def doAction(serial_device):
                     last_serialwrite_epoch_time = epoch_time
         else:
             # Tell the serial connected device the script execution is over
-            logging.warning(SCRIPT_TO_LAUNCH + " execution has ended, sending end signal to ESP32")
+            logging.warning(script_to_run + " execution has ended, sending end signal to ESP32")
             sendMessage(serial_device, END_OF_TASK, "")
             backup_is_done = True
 
@@ -95,7 +102,13 @@ def doAction(serial_device):
 # Loop
 ##############################################
 
-logging.warning("Script started, searching for a device with a serial number matching " + ESP32_SERIAL)
+logging.warning("Script started, searching for configuration file: " + CONFIG_FILE_PATH)
+data = configFileLoader()
+
+script_to_run = data.get('script_to_run')
+esp32_serial = data.get('esp32_serial')
+
+logging.warning("Config file found! Script to run is " + script_to_run + ". Now searching for a device with a serial number matching " + str(esp32_serial))
 
 device_port = None
 serial_device = None
@@ -103,7 +116,7 @@ serial_device = None
 while True: 
     if device_port == None:
         # No device connected, searching for it on a 5 seconds interval
-        device_port = searchDevicePortBySerialNumber(ESP32_SERIAL)
+        device_port = searchDevicePortBySerialNumber(esp32_serial)
         if device_port == None:
             time.sleep(5)
     else:
@@ -125,7 +138,7 @@ while True:
                     if DO_ACTION in input_data:
                         # DO_ACTION order received, doing said action
                         logging.warning("DO_ACTION instruction detected")
-                        doAction(serial_device)
+                        doAction(serial_device, script_to_run)
                     else:
                         logging.warning("Serial message has no known meaning, ignoring")
             except serial.SerialException:
