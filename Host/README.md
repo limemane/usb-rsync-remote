@@ -1,6 +1,6 @@
 # Host script
 
-To allow the ESP32 based USB remote to start, the following Python script `src/usb_remote_listener.py` must be running on the host machine.
+To allow the ESP32 USB remote to start, the following Python script `src/usb_remote_listener.py` must be running on the host machine.
 A YAML config file is provided to allow the remote user to specifiy the path of the script the host should launch, and the ESP32 device serial number
 
 ## How do I find my ESP32 serial number
