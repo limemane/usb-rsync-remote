@@ -20,7 +20,7 @@ END_OF_TASK = "-ENDOFTASK="
 BAUD_RATE = 115200
 
 # Config file path
-CONFIG_FILE_PATH = "config.yaml"
+CONFIG_FILE_PATH = "./config.yaml"
 
 ##############################################
 # Functions
