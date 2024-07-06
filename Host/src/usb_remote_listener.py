@@ -85,7 +85,6 @@ def doAction(serial_device, script_to_run):
                 if match:
                     # Send data to display to the serial connected device as a single string
                     serializedLogLine = match.group(1) + "_" + match.group(2) + "_" + match.group(3) + "_" + match.group(4)
-                    logging.warning("Sending rsync log line : " + serializedLogLine)
                     sendMessage(
                         serial_device, 
                         SHOW_DATA, 
