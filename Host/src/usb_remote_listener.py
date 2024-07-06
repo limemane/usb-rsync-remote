@@ -47,7 +47,7 @@ def searchDevicePortBySerialNumber(serial_number):
     device_port_found = None
     # Scanning serial ports waiting for the right serial number
     for port in serial.tools.list_ports.comports():
-        if port.serial_number == serial_number:
+        if port.serial_number == str(serial_number):
             # Device found, store its port and break loop
             logging.warning(f"Port found: {port} - Serial: {port.serial_number}")
             device_port_found = port.device
