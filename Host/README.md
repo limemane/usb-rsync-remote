@@ -16,5 +16,5 @@ Search for the device corresponding to your ESP32, then look for the `iSerial` p
 ### Windows
 Open the Device Manager. 
 You should get a device with a COM port assigned to it. Show its properties then go into the details tab. 
-Search for a property looking like `access path to device instance` or `device instance access path` (translated from a non-english OS, might be name differently).
+Search for a property looking like `access path to device instance` or `device instance access path` (translated from a non-english OS, might be named differently).
 The property value shows a path, your ESP32 serial number is located after the last `\` symbol. 
