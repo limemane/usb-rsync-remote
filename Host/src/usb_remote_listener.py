@@ -42,7 +42,7 @@ def sendMessage(serial_device, message_type, message_content):
     ) 
     time.sleep(0.05) 
 
-# Function returning a devide port on the host machine given its serial number
+# Function returning the device port on the host machine given its serial number
 def searchDevicePortBySerialNumber(serial_number):
     device_port_found = None
     # Scanning serial ports waiting for the right serial number
