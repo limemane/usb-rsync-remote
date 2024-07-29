@@ -1,7 +1,9 @@
 # USB script launcher
 
 A crossplatform USB remote with a push button and a small OLED display. 
-Pushing the button allows you to start any script you set up on the computer where you plugged the remote (aka "host machine"). The host machine can also send informations back to the remote display to track the script execution.
+
+Pushing the button allows you to start any script you set up on the computer where you plugged the remote (aka "host machine"). 
+The host machine can also send informations back to the remote display to track the script execution.
 
 ## Hardware involved
 
