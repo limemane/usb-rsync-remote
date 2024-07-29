@@ -10,7 +10,7 @@ Pushing the button allows you to start any script you set up on the computer whe
 - One push button 
 - A computer able to run a Python script
 
-## Remote electronic diagram
+## Electronic diagram
 
 - Todo
 
