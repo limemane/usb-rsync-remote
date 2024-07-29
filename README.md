@@ -20,9 +20,10 @@ The host machine can also send informations back to the remote display to track 
 
 ### Host machine
 
-- Get Python 3+ with pyserial installed on the host machine. (use `pip3 install pyserial` to get pyserial after installing python)
-- Download the `Host` folder on your host machine
-- Open the config file `Host/src/config.yaml`
+- Get Python 3+ with pyserial installed on the host machine
+  - Use `pip3 install pyserial` to get pyserial after installing Python
+- Put the `Host` folder on your host machine
+- Open the config file `Host/src/config.yaml` and
   - Set the path to the script you want the remote to launch
   - Set you ESP32 serial id https://github.com/turbojonquille/usb-script-launcher/blob/main/Host/README.md
 - You can now start the host script `Host/src/usb_remote_listener.py`.
@@ -30,4 +31,5 @@ The host machine can also send informations back to the remote display to track 
 ### Remote
 
 - Using VScode and Platform.io, compile and upload `ESP32` content to your ESP32.
+- You can now plug it in the host machine and press the button !
 
