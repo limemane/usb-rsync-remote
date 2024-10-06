@@ -14,19 +14,14 @@ Said computer can also send back informations to the USB remote to display vario
 
 ## Setup
 
-### Computer
-
-- Get Python 3+ installed on the host machine
-- Put the `Host` folder on your host machine
+- Get Python 3+ installed
+- Put the `Host` folder on your computer
 - Install required librairies `pip install -r Host/requirements.txt`
 - Open the config file `Host/src/config.yaml` and 
   - Set the path to the bash script you want the remote to launch
   - Set you ESP32 serial id https://github.com/turbojonquille/usb-script-launcher/blob/main/Host/README.md
-- You can now start the host script `Host/src/usb_remote_listener.py`.
-
-### USB Remote
-
-- Using VScode and Platform.io, compile and upload `ESP32` content to your ESP32.
-- You can now plug it in the host machine. "Ready to start" should appear on the remote OLED display after a short while.
-- By pressing the push button your script should now start.
+- Connect you ESP32 to the computer and using VScode and Platform.io compile and upload `ESP32` content to your ESP32.
+- Start the python script `sudo python3 Host/src/usb_remote_listener.py`.
+- "Ready to start" should appear on the remote OLED display after a short while.
+- Press the push button. The script you set in the config file should now start.
 
