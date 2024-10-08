@@ -16,7 +16,6 @@ A small Python script has to run on the computer where the remote is plugged to 
 ## How to install
 
 - Get Python 3+ installed
-- Put the `Host` folder on your computer
 - Install required librairies `pip install -r Host/requirements.txt`
 - Open the config file `Host/src/config.yaml` and 
   - Set the path to the bash script containing your rsync command (see https://github.com/limemane/usb-rsync-remote/blob/main/Host/example/rsync_start_script.sh)
