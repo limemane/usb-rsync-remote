@@ -113,7 +113,7 @@ void loop()
     }
     else if (serialRead.startsWith(END_OF_TASK)) 
     {
-      pDisplayManager->setServerState("Host task successful");
+      pDisplayManager->setServerState(" Host task has ended");
       pDisplayManager->displayDefaultScreen();
 
       // Changing flag state to allow the user to launch tasks again
