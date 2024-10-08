@@ -1,15 +1,14 @@
-# USB script launcher
+# USB rsync remote
 
-A crossplatform USB remote with a push button and a small OLED display. 
-
-Pushing the button allows you to start any bash script you set up on the computer where you plugged the remote. 
-Said computer can also send back informations to the USB remote to display various data on the OLED screen.
+A USB remote with a push button and a small OLED display for Linux/macOS.
+The intended usage of this remote is to start a rsync backup when the button is pressed, and to display rsync logs data on the OLED display while rsync is running.
+A small Python script has to run on the computer where the remote is plugged to make it work properly. 
 
 ## Hardware involved
 
 - 1x ESP32
-- 1x OLED SSD1306 display
-- 1x push button 
+- 1x OLED SSD1306 I2C display (SCL pin 22, SDA pin 21)
+- 1x Push button (pin 25)
 - Any computer able to run a Python script
 
 ## Setup

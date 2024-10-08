@@ -1,0 +1,2 @@
+script_to_run: test/fake_rsync_logs.sh # Replace this with your own rsync script
+esp32_serial: 5185008510 # Replace with yours, read Host/test/README.md to know how
