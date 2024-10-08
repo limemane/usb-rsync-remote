@@ -1,7 +1,9 @@
 # USB rsync remote
 
 A USB remote with a push button and a small OLED display for Linux/macOS.
+
 The intended usage of this remote is to start a rsync backup when the button is pressed, and to display rsync logs data on the OLED display while rsync is running.
+
 A small Python script has to run on the computer where the remote is plugged to make it work properly. 
 
 ## Hardware involved
