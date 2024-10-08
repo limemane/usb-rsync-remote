@@ -1,0 +1,14 @@
+[Unit]
+Description=USB rsync remote
+After=network.target network-online.target
+
+[Service]
+ExecStart=/usr/bin/python3 usb_remote_listener.py
+WorkingDirectory=/full/path/to/the/USB-remote-script/folder
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

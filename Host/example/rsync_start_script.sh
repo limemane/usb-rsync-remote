@@ -1,5 +1,5 @@
 # This is an example of what your rsync launch script should look like.
-# The rsync sommand below is the one I use to backup file from my home server to a ExFAT Hard drive. Tune it to match your own needs :)
+# The rsync command below is the one I use to backup data from my home server to an ExFAT Hard drive. Tune it to match your own needs :)
 
 # Mount external usb drive where files will be backed up
 sudo mount /dev/your/device /media/mount/device/here
@@ -20,4 +20,4 @@ sudo rsync -hrltDR --delete --modify-window=1 --info=progress2 --log-file=/your/
 sync
 
 # Unmount external usb drive
-sudo umount /dev/sdc2
+sudo umount /dev/your/device
