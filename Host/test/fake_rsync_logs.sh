@@ -1,8 +1,5 @@
 # rsync log output simulation, with random delays between log lines
 
-# the real rsync command I use to backup my things looks like this
-# sudo rsync -hrltDR --delete --modify-window=1 --info=progress2 --log-file=/path/to/optional/log/file path/to/folder/to/backup path/to/other/folder/to/backup path/to/backup/destination 
-
 echo "              0   0%    0,00kB/s    0:00:00 (xfr#1, ir-chk=1046/1049)"
 sleep 1
 echo "              0   0%    0,00kB/s    0:00:00 (xfr#1, ir-chk=1034/1049)"

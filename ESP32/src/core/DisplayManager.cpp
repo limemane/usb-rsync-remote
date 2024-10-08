@@ -70,5 +70,5 @@ void DisplayManager::addTopTitle()
     pDisplay->setTextColor(BLACK, WHITE);
     pDisplay->setTextSize(1);
     pDisplay->setCursor(0, 0);
-    pDisplay->println(" USB Script Launcher ");
+    pDisplay->println("  USB rsync remote   ");
 }
