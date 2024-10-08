@@ -65,32 +65,30 @@ def doAction(serial_device, script_to_run):
     )
     logging.warning(script_to_run + " now starting")
 
-    backup_is_done = False;
+    backup_is_done = False
+    last_serialwrite_epoch_time = 0
 
     # Keep sending informations to serial connected device until script execution is done
     while backup_is_done == False:
         last_stdout_line = ""
-        last_serialwrite_epoch_time = 0
 
         # Check if script execution has ended or not
         if script_process.poll() is None: 
             # Still running
             last_stdout_line = script_process.stdout.readline()
+            # Extracting reconstruction speed, elapsed time on current file, current file number, remaining files to check
+            pattern = r"(\d{1,3},\d{2}.B\/s).*(\d{1,2}:\d{2}:\d{2}).*xfr#(\d{1,30}).*(\d{1,30}\/\d{1,30})"
+            match = re.search(pattern, last_stdout_line)
+            if match:
+                # Send data to display to the serial connected device as a single string
+                serializedLogLine = match.group(1) + "_" + match.group(2) + "_" + match.group(3) + "_" + match.group(4)
+                sendMessage(
+                    serial_device, 
+                    SHOW_DATA, 
+                    serializedLogLine
+                ) 
             # Wait at least one second between serial writes
-            epoch_time = int(time.time())
-            if epoch_time > last_serialwrite_epoch_time :
-                # Extracting reconstruction speed, elapsed time on current file, current file number, remaining files to check
-                pattern = r"(\d{1,3},\d{2}.B\/s).*(\d{1,2}:\d{2}:\d{2}).*xfr#(\d{1,30}).*(\d{1,30}\/\d{1,30})"
-                match = re.search(pattern, last_stdout_line)
-                if match:
-                    # Send data to display to the serial connected device as a single string
-                    serializedLogLine = match.group(1) + "_" + match.group(2) + "_" + match.group(3) + "_" + match.group(4)
-                    sendMessage(
-                        serial_device, 
-                        SHOW_DATA, 
-                        serializedLogLine
-                    ) 
-                    last_serialwrite_epoch_time = epoch_time
+            time.sleep(0.5)
         else:
             # Tell the serial connected device the script execution is over
             logging.warning(script_to_run + " execution has ended, sending end signal to ESP32")
