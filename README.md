@@ -19,7 +19,7 @@ A small Python script has to run on the computer where the remote is plugged to 
 - Put the `Host` folder on your computer
 - Install required librairies `pip install -r Host/requirements.txt`
 - Open the config file `Host/src/config.yaml` and 
-  - Set the path to the bash script you want the remote to launch
+  - Set the path to the bash script containing your rsync command
   - Set you ESP32 serial id https://github.com/turbojonquille/usb-script-launcher/blob/main/Host/README.md
 - Connect you ESP32 to the computer and using VScode and Platform.io compile and upload `ESP32` content to your ESP32.
 - Start the python script `sudo python3 Host/src/usb_remote_listener.py`.
