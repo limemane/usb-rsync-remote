@@ -8,6 +8,7 @@ A YAML config file is provided to allow the user to specifiy the path of the scr
 ### macos
 Open a terminal and type `ls /dev/tty* | grep usb`.
 You should get something similar to `/dev/tty.usbserial-xxxx` where `xxxx` is your ESP32 serial number.
+You can also use `system_profiler SPUSBDataType`.
 
 ### GNU/Linux 
 Open a terminal and type `lsusb -v`.
