@@ -28,8 +28,3 @@ Type `stty 115200 -F /dev/ttyACM0 raw -echo` on the WSL-hosted GNU/Linux to star
 `cat /dev/ttyACM0` can be used to show messages sent by the ESP32
 
 To send a message to the ESP32 use `echo "message to send" > /dev/ttyACM0`
-
-
-### Using Python
-
-see test/esp32-serial-test.py
