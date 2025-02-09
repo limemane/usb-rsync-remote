@@ -17,8 +17,8 @@
 #define PUSH_BUTTON   25
 
 // Orders
-#define CONNECTION_OK         "-CONNOK="
-#define CONNECTION_OK_LENGTH  8
+#define HANDSHAKE_EXPECTED    "-HANDSHAKE=iamhost"
+#define HANDSHAKE_RESPONSE    "-HANDSHAKE=imaremote"
 #define DO_ACTION             "-DOACTION="
 #define DO_ACTION_LENGTH      11
 #define SHOW_DATA             "-SHOWDATA="
@@ -75,6 +75,26 @@ void setup()
 
   // Setup button
   pinMode(PUSH_BUTTON, INPUT_PULLDOWN);
+
+  // Waiting for first handshake
+  while(!can_press_button) {
+    if (Serial.available() > 0) 
+    {
+      String serialRead = Serial.readString();
+      serialRead.trim();
+      if (serialRead.equals(HANDSHAKE_EXPECTED)) 
+      {
+        // Handshake received, sending handshake response
+        Serial.println(HANDSHAKE_RESPONSE);
+
+        // Allowing user to interact with the remote button
+        can_press_button = true;
+        pDisplayManager->setServerState("   Ready to start");
+        pDisplayManager->displayDefaultScreen();
+      }
+    }
+    delay(1000);
+  }
 }
 
 /*******************************************************
@@ -89,13 +109,7 @@ void loop()
     String serialRead = Serial.readString();
     serialRead.trim();
 
-    if (serialRead.startsWith(CONNECTION_OK)) 
-    {
-      can_press_button = true;
-      pDisplayManager->setServerState("   Ready to start");
-      pDisplayManager->displayDefaultScreen();
-    }
-    else if (serialRead.startsWith(SHOW_DATA)) 
+    if (serialRead.startsWith(SHOW_DATA)) 
     {
       // Delete show_data header
       String rawData = serialRead.substring(SHOW_DATA_LENGTH - 1, serialRead.length());
@@ -133,5 +147,8 @@ void loop()
     task_is_done = false;
 
     Serial.println(DO_ACTION);
+
+    pDisplayManager->setServerState("      Sent !");
+    pDisplayManager->displayDefaultScreen();
   }
 }

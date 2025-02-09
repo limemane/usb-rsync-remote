@@ -11,7 +11,8 @@ import yaml
 ##############################################
 
 # Instructions
-CONNECTION_OK = "-CONNOK="
+HANDSHAKE = "-HANDSHAKE="
+HANDSHAKE_EXPECTED = "-HANDSHAKE=imaremote"
 DO_ACTION = "-DOACTION="
 SHOW_DATA = "-SHOWDATA="
 END_OF_TASK = "-ENDOFTASK="
@@ -42,18 +43,41 @@ def sendMessage(serial_device, message_type, message_content):
     ) 
     time.sleep(0.05) 
 
-# Function returning the device port on the host machine given its serial number
-def searchDevicePortById(esp32_pid, esp32_vid):
-    device_port_found = None
+# Function returning the device on the host machine given its pid and vid
+def findDeviceByPidVid(esp32_pid, esp32_vid):
+    serial_device = None
     # Scanning serial ports waiting for the right pid and vid
     for port in serial.tools.list_ports.comports():
         if port.vid == esp32_vid and port.pid == esp32_pid:
-            # Device found, store its port and break loop
-            logging.warning(f"Port found: {port}")
-            device_port_found = port.device
-            break
+            # Found a device, initialize serial interface
+            serial_device = serial.Serial(
+                port=port.device, 
+                baudrate=BAUD_RATE, 
+                timeout=None
+            ) 
+            # Do handshake
+            logging.warning("Sending handshake")
+            sendMessage(serial_device, HANDSHAKE, "iamhost") 
+            logging.warning("Awaiting handshake response")
+            if serial_device.isOpen():
+                # Waiting 1 second for handshake response
+                serial_device.timeout = 5
+                input_data = serial_device.readline().strip().decode("utf-8")
+                logging.warning("Received serial message : " + input_data)
+                if HANDSHAKE_EXPECTED in input_data: 
+                    # Device found, reset timeout to None
+                    serial_device.timeout = None
+                    # Store device port and break loop
+                    logging.warning(f"Handshake OK, device port is: {port}")
+                    break
+                else:
+                    serial_device.close()
+                    serial_device = None
+            else:
+                serial_device.close()
+                serial_device = None
 
-    return device_port_found
+    return serial_device
 
 # Function launching a script and keeping the serial connected device updated about it's state
 def doAction(serial_device, script_to_run):
@@ -110,40 +134,32 @@ esp32_vid = data.get('esp32_vendor_id')
 
 logging.warning("Config file found! Script to run is " + script_to_run + ". Now searching for a device with a product ID matching " + str(esp32_pid) + " and a vendor ID matching " + str(esp32_vid))
 
-device_port = None
 serial_device = None
 
 while True: 
-    if device_port == None:
-        # No device connected, searching for it on a 5 seconds interval
-        device_port = searchDevicePortById(esp32_pid, esp32_vid)
-        if device_port == None:
-            time.sleep(5)
-    else:
+    if serial_device == None:
+        # ESP32 does a serial write at boot, waiting for it to finish before first serial read
+        time.sleep(1)
+        # No device connected, waiting 4 more seconds before next scan
+        serial_device = findDeviceByPidVid(esp32_pid, esp32_vid)
         if serial_device == None:
-            # Device found, initialize serial interface
-            serial_device = serial.Serial(
-                port=device_port, 
-                baudrate=BAUD_RATE, 
-                timeout=None
-            ) 
-            sendMessage(serial_device, CONNECTION_OK, "") 
-        else:
-            try:
-                # Still connected : wait for an instruction to be given on the serial interface
-                if serial_device.isOpen():
-                    input_data = serial_device.readline().strip().decode("utf-8")
-                    logging.warning("Received serial message : " + input_data)
+            time.sleep(4)
+    else:
+        try:
+            # Still connected : wait for an instruction to be given on the serial interface
+            if serial_device.isOpen():
+                input_data = serial_device.readline().strip().decode("utf-8")
+                logging.warning("Received serial message : " + input_data)
 
-                    if DO_ACTION in input_data:
-                        # DO_ACTION order received, doing said action
-                        logging.warning("DO_ACTION instruction detected")
-                        doAction(serial_device, script_to_run)
-                    else:
-                        logging.warning("Serial message has no known meaning, ignoring")
-            except serial.SerialException:
-                # Device not connected anymore, reseting stored values about the device
-                logging.warning("Can't reach device anymore, assuming it was disconnected. Will continue to search for it.")
-                device_port = None
-                serial_device = None
+                if DO_ACTION in input_data:
+                    # DO_ACTION order received, doing said action
+                    logging.warning("DO_ACTION instruction detected")
+                    doAction(serial_device, script_to_run)
+                else:
+                    logging.warning("Serial message has no known meaning, ignoring")
+        except serial.SerialException:
+            # Device not connected anymore, reseting stored values about the device
+            logging.warning("Can't reach device anymore, assuming it was disconnected. Will continue to search for it.")
+            device_port = None
+            serial_device = None
                 
