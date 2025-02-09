@@ -1,2 +1,3 @@
 script_to_run: test/fake_rsync_logs.sh # Replace this with your own rsync script
-esp32_serial: 5185008510 # Replace with yours, read Host/test/README.md to know how
+esp32_product_id: 0x7523 # Replace with yours, read Host/README.md to know how
+esp32_vendor_id: 0x1a86 # Replace with yours, read Host/README.md to know how

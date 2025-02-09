@@ -43,13 +43,13 @@ def sendMessage(serial_device, message_type, message_content):
     time.sleep(0.05) 
 
 # Function returning the device port on the host machine given its serial number
-def searchDevicePortBySerialNumber(serial_number):
+def searchDevicePortById(esp32_pid, esp32_vid):
     device_port_found = None
-    # Scanning serial ports waiting for the right serial number
+    # Scanning serial ports waiting for the right pid and vid
     for port in serial.tools.list_ports.comports():
-        if port.serial_number == str(serial_number):
+        if port.vid == esp32_vid and port.pid == esp32_pid:
             # Device found, store its port and break loop
-            logging.warning(f"Port found: {port} - Serial: {port.serial_number}")
+            logging.warning(f"Port found: {port}")
             device_port_found = port.device
             break
 
@@ -105,9 +105,10 @@ logging.warning("Script started, searching for configuration file: " + CONFIG_FI
 data = configFileLoader()
 
 script_to_run = data.get('script_to_run')
-esp32_serial = data.get('esp32_serial')
+esp32_pid = data.get('esp32_product_id')
+esp32_vid = data.get('esp32_vendor_id')
 
-logging.warning("Config file found! Script to run is " + script_to_run + ". Now searching for a device with a serial number matching " + str(esp32_serial))
+logging.warning("Config file found! Script to run is " + script_to_run + ". Now searching for a device with a product ID matching " + str(esp32_pid) + " and a vendor ID matching " + str(esp32_vid))
 
 device_port = None
 serial_device = None
@@ -115,7 +116,7 @@ serial_device = None
 while True: 
     if device_port == None:
         # No device connected, searching for it on a 5 seconds interval
-        device_port = searchDevicePortBySerialNumber(esp32_serial)
+        device_port = searchDevicePortById(esp32_pid, esp32_vid)
         if device_port == None:
             time.sleep(5)
     else:
