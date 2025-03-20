@@ -19,7 +19,7 @@ A small Python script has to run on the computer where the remote is plugged to 
 - Install required librairies `pip3 install -r Host/requirements.txt`
 - Open the config file `Host/config.yaml` and 
   - Set the path to the bash script containing your rsync command (see https://github.com/limemane/usb-rsync-remote/blob/main/Host/example/rsync_start_script.sh)
-  - Set you ESP32 serial id https://github.com/limemane/usb-rsync-remote/blob/main/Host/README.md
+  - Set you ESP32 VID/PID https://github.com/limemane/usb-rsync-remote/blob/main/Host/README.md
 - Connect you ESP32 to the computer and using VScode and Platform.io compile and upload `ESP32` content to your ESP32.
 - Start the python script as root `sudo python3 Host/usb_remote_listener.py`.
 - "Ready to start" should appear on the remote OLED display after a short while.
