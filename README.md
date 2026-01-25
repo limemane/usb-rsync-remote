@@ -10,8 +10,8 @@ Great for headless home servers !
 ### How does it works 
 
 A small Python script has to run on the computer where the remote is plugged.
-When the USB remote button is pressed, a serial commend is sent to the computer.
-As soon as the command is read by the Python script, a bash script containing the rsync command of your choice is started by the Python script, and rsync logs are formatted and sent to the USB remote.
+When the USB remote button is pressed, a serial command is sent to the computer.
+As soon as the command is read by the Python script, a bash script containing the rsync command of your choice is started by the Python script, and rsync logs are then formatted and sent to the USB remote.
 
 ### Hardware involved
 
@@ -42,7 +42,7 @@ First, clone this repo on your computer `git clone https://github.com/limemane/u
 - Press the push button. The script you set in the config file should now start and rsync logs shloud also be displayed on the ESP32 OLED display
 
 ### Step 4: Start listener on computer startup (GNU/Linux)
-- If you also want usb_remote_listener.py to start on compoter boot, copy the following service file (see https://github.com/limemane/usb-rsync-remote/blob/main/Host/example/usb-rsync-remote.service) into `/etc/systemd/system`. Don't forget to update WorkingDirectory path or it will not work !
+- If you also want usb_remote_listener.py to start automaticaly, copy the following service file (see https://github.com/limemane/usb-rsync-remote/blob/main/Host/example/usb-rsync-remote.service) into `/etc/systemd/system`. Don't forget to set your own WorkingDirectory path.
 - Get systemd to read the newly created service file with `sudo systemctl daemon-reload`
 - Enable the service `sudo systemctl enable usb-rsync-remote.service`
 - Reboot. The script should now start on startup.
