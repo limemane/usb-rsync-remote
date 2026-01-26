@@ -4,14 +4,17 @@
 <img src="https://github.com/limemane/usb-rsync-remote/blob/main/usbRemote.png"/>
 </p>
 
-A USB remote with a display, used to start a rsync backup when its button is pressed. rsync logs will be shown on the OLED display. 
-Great for headless home servers !
+A USB remote with a display. Its role is to trigger a rsync backup after pressing a button, display live informations from rsync logs on the screen and finally show a message when the rsync task is done.
+
+### Use case
+
+Personally I'm using this to trigger a backup from my home server to an external drive on the go, without needing to power on another computer. I know this could also be achieved by making a script to start a backup directly when plugging an external drive, but I wanted to get some data and also a clear confirmation that rsync was done and my drive unmounted before actually unplugging it, so I came to this solution ! 
 
 ### How does it works 
 
 A light Python script has to run on the computer where the remote is plugged.
 When the USB remote button is pressed, a serial command is sent to the computer.
-As soon as the command is read by the Python script, a bash script containing the rsync command of your choice is started by the Python script, and rsync logs are then formatted and sent to the USB remote.
+As soon as the command is read by the Python script, it starts the bash script containing the rsync command of your choice, and rsync logs are then formatted and sent to the USB remote.
 
 ### Hardware involved
 
