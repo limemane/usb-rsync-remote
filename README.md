@@ -25,7 +25,7 @@ As soon as the command is read by the Python script, it starts the bash script c
 
 # Getting started
 
-First, clone this repo on your computer `git clone https://github.com/limemane/usb-rsync-remote.git`
+First, clone this repo on your computer. The following instructions are intended for GNU/Linux but the Python script has also been tested on macOS. It should also work on Windows (I guess you could install rsync using pacman and you would have to run rsync with a batch script)
 
 ### Step 1: Get your ESP32 ready
 - Using VSCode, install the Platform.io extension
@@ -36,8 +36,8 @@ First, clone this repo on your computer `git clone https://github.com/limemane/u
 - Install Python 3+
 - Install the required Python librairies `pip3 install -r Host/requirements.txt`
 - Open the config file `Host/config.yaml` and :
-  - Set the path to the bash script containing your rsync command. See https://github.com/limemane/usb-rsync-remote/blob/main/Host/example/rsync_start_script.sh
-  - Set you ESP32 VID/PID. See https://github.com/limemane/usb-rsync-remote/blob/main/Host/README.md
+  - Set the path to the bash script containing your rsync command. The rsync parameter `--info=progress2` is mandartory in order to get the logs to show on the remote display. I'm using a script similar to this one for my own setup: https://github.com/limemane/usb-rsync-remote/blob/main/Host/example/rsync_start_script.sh
+  - Set your ESP32 VID/PID. There are multiple ways to find these two values depending your OS: https://github.com/limemane/usb-rsync-remote/blob/main/Host/README.md
 - Start the Python script as root `sudo python3 Host/usb_remote_listener.py`.
 
 ### Step 3: Profit!
