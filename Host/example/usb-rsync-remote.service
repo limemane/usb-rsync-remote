@@ -3,6 +3,8 @@ Description=USB rsync remote
 After=network.target network-online.target
 
 [Service]
+# If using a python virtual env, use the following :
+# ExecStart=/home/your-user/.your-virtualenv/pythonapp/bin/python usb_remote_listener.py
 ExecStart=/usr/bin/python3 usb_remote_listener.py
 WorkingDirectory=/full/path/to/the/USB-remote-script/folder
 StandardOutput=inherit
